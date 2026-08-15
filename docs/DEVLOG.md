@@ -196,3 +196,9 @@ Des contraintes (CHECK) ont également été ajoutées afin d'empêcher certaine
     la règle que j'ai appliquée pour choisir entre ON DELETE CASCADE et ON DELETE RESTRICT : les tables qui représentent une **composition** dans mon diagramme de classes (LigneCommande, LigneAppro, Paiement — qui n'ont aucun sens sans leur parent) sont en CASCADE. Les class qui sont durables (Client, Produit, Fournisseur, Utilisateur) sont en RESTRICT, pour ne jamais perdre l'historique de ventes ou de dettes si quelqu'un supprime un client ou un produit par erreur.
 
       Pour SQLite, j'ai dû adapter trois choses par rapport au script PostgreSQL : SERIAL devient INTEGER PRIMARY KEY AUTOINCREMENT, BOOLEAN n'existe pas donc j'utilise INTEGER avec une contrainte CHECK (... IN (0,1)), et il faut activer manuellement les clés étrangères avec PRAGMA foreign_keys = ON;(elles sont désactivées par défaut dans SQLite, contrairement à PostgreSQL).
+
+
+        J'ai implémenté Database::getInstance() en pattern Singleton : le constructeur est privé, donc impossible de faire new Database() depuis l'extérieur — il faut obligatoirement passer par getInstance(), qui garantit qu'une seule connexion PDO existe pour toute la durée de la requête, même si plusieurs Repository en ont besoin.
+
+         - Pour le Singleton, j'ai dû comprendre pourquoi une propriété `static` était nécessaire pour `$instance` (contrairement à une propriété normale, elle est partagée par toutes les instances de la classe et survit entre les appels à `getInstance()`).
+j'ai aussi la connection qui marche super bien.
