@@ -1,0 +1,180 @@
+# 📓 Journal de Développement (DEVLOG)
+**Nom & Prénom** : [Sankhe & Bamba]  
+**Projet** : StoreManager Pro (ERP PHP/POO)  
+
+---
+
+## 1. Suivi Chronologique des Phases
+### 🌃 [Vendredi - Phase 1] : Conception & BDD Fallback
+- **Heure de réalisation** : 19h00 – 20h45 (vendredi 14 août 2026)**;
+- **Ce qui a été fait** : 
+  **a. Diagramme de cas d'utilisation (Use Case)**
+  -En premier j'ai cherche a Comprendre le besoin fonctionnel ,identifier les acteurs qui interagissent avec le système  (Admin, Vente, Stock, Inventaire) .
+  -j'ai aussi identifier les fonctionnalités de chaque acteur.
+  -Vérifier les droits de chaque acteur ce que chaque acteur faire dans le systeme et q'il ne peut pas faire par expemple l' Admin Boutique et inventaire tous les deux peuvent manipuler les meme donnée mais l'admin peut ajouter produit alors ce lui d'iventaire ne peut faire que consulter le stock d'une produit 
+-gerer les relations entre les cas d'utilisation.
+-Revoir les diagrammes afin de supprimer les fonctionnalités non justifiées comme utilisateur_id
+-j'ai auusi fait les diagrammes en PlantUML`useCaseVente.puml`, `useCaseStock.puml`, `useCaseInventaire.puml`, `useCaseAdmin.puml`.Des diagrammes séparés permettent également d'étudier chaque acteur individuellement : Cette séparation facilite la lecture et prépare la prochaine étape de conception.
+La règle suivie pendant cette étape est : Une fonctionnalité ne doit pas être ajoutée uniquement parce qu'elle semble utile. Elle doit être justifiée par le besoin métier.
+ 
+ j'ai appris aussi  appris
+  Différence `<<include>>` vs `<<extend>>`** : j'ai utilisé `<<include>>` pour "Vérifier le stock" et "Vérifier la limite de crédit" parce que ces vérifications ont lieu **à chaque fois** qu'on enregistre une vente, peu importe le mode de paiement. À l'inverse, "Créer une dette" est en `<<extend>>` de "Enregistrer une vente", car ça n'arrive que **dans certains cas** (paiement partiel ou crédit total) — une vente payée comptant n'a jamais de dette associée.
+
+- **Difficultés / Obstacles** : 
+La principale difficulté n'était pas la syntaxe PlantUML, mais la détermination du périmètre fonctionnel.
+
+Il fallait notamment distinguer :
+
+une fonctionnalité réellement nécessaire ;
+une fonctionnalité simplement pratique ;
+une fonctionnalité qui relève d'un autre acteur ;
+une fonctionnalité qui pourrait être ajoutée plus tard.
+
+Cette réflexion m'a permis de comprendre qu'un diagramme de cas d'utilisation ne sert pas uniquement à dessiner des acteurs et des ovales.
+
+Il sert surtout à définir précisément ce que le système doit permettre de faire et à qui.
+
+
+
+
+b Diagramme de Classe **
+
+Cette étape a pour objectif de transformer les besoins fonctionnels de StoreManager en modèle métier avant l'implémentation.
+
+j'ai identification des entités métier ;
+Classes retenues
+
+Role ,ModePaiement ,StatutAppro ,Utilisateur ,Produit ,Client ,Fournisseur ;Commande ,LigneCommande ,Dette ,Paiement, Appro
+
+LigneAppro
+définition des attributs et cardinalités ;
+
+  j'ai aussi identifier queleque règles métier identifiées
+
+*Vente
+
+Une vente doit vérifier la disponibilité du stock avant validation.
+
+Enregistrer une vente <<include>> Vérifier le stock
+
+Une vente peut être entièrement payée ou partiellement payée.
+
+Exemple :
+
+total = 100 000 FCFA
+
+payé = 100 000 FCFA
+
+aucune dette.
+
+Si :
+
+total = 100 000 FCFA
+
+payé = 60 000 FCFA
+
+dette = 40 000 FCFA.
+
+La création de dette est donc conditionnelle :
+
+Créer une dette <<extend>> Enregistrer une vente
+
+Dette
+
+Une commande peut ne générer aucune dette ou une seule dette :
+
+Commande "1" --> "0..1" Dette
+
+Une dette peut être réglée en plusieurs fois :
+
+Dette "1" *-- "0..*" Paiement
+
+Le montant restant évolue après chaque paiement.
+
+Approvisionnement
+
+Un approvisionnement appartient à un fournisseur et possède un statut.
+
+Une ligne d'approvisionnement distingue la quantité prévue (qteAppro) de la quantité réellement reçue (qteRecu), ce qui permet de représenter une réception partielle.
+
+4. Justification des principales classes
+
+Utilisateur
+
+Attributs : id, role_id, nomComplet, email, motPasse.
+
+Un utilisateur possède un rôle. L'identifiant utilisateur est associé aux opérations importantes afin d'assurer une traçabilité persistante.
+
+Produit
+
+Attributs : id, libelle, prixVente, stock, seuilAlert.
+
+Le produit contient le stock disponible et le prix de vente.
+
+Client
+
+Attributs : id, nom, prenom, email, tel, limiteCredit.
+
+La limite de crédit permet d'envisager un contrôle du crédit accordé au client.
+
+Fournisseur
+
+Attributs : id, nomComplet, email, telephone, adresse.
+
+Commande
+
+Attributs : id, client_id, utilisateur_id, modePaiement_id, datCommande, montantTotal, montantPaye, estCredit.
+
+La commande représente la vente et conserve son client, son auteur, son montant et son paiement.
+
+LigneCommande
+
+Attributs : id, commande_id, produit_id, quantite, prixUnitaire, soueTotal.
+
+Elle permet de représenter plusieurs produits dans une commande et de conserver le prix appliqué au moment de la vente.
+
+Dette
+
+Attributs : id, commande_id, client_id, montantInitial, montantRestant, statut.
+
+Elle représente le montant restant dû.
+
+Paiement
+
+Attributs : id, dette_id, modePaiement_id, utilisateur_id, datePaiement, montant.
+
+Chaque paiement est rattaché à une dette et à un mode de paiement.
+
+Appro
+
+Attributs : id, fournisseur_id, statutAppro_id, utilisateur_id, refBl, dateAppro, montantTotal.
+
+LigneAppro
+
+Attributs : id, appro_id, produit_id, qteAppro, qteRecu, prixReel, sous_total.
+
+Ce que cette étape permet d'apprendre:
+Cette étape met en pratique :
+
+analyse des besoins ;
+
+règles métier ;
+
+cas d'utilisation ;
+
+<<include>> et <<extend>> ;
+
+classes métier ;
+
+associations ;
+
+cardinalités ;
+
+composition ;
+
+modélisation des relations plusieurs-à-plusieurs ;
+
+traçabilité ;
+
+préparation d'une architecture avant développement.
+
