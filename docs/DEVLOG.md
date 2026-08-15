@@ -209,3 +209,37 @@ j'ai aussi modifier ces ligne pour que la conexion marche sans problemme  avec m
                 "postgres",
                 "1234"
             ); et             $sqlitePath = dirname(__DIR__) . '/../erp.php';
+
+
+
+### ☀️ [Samedi - Phase 2] : POO, Repositories & Ventes POS
+- **Heure de réalisation: 9h00 – 20h (samedi 15 août 2026)** : 
+- **Ce qui a été fait** : 
+j' J'ai créé les 13 classes d'entités dans `src/Model/Entity/` en utilisant le constructeur 
+ les propriétés sont déclarées directement dans les paramètres du constructeur, avec visibilité private, ce qui évite de dupliquer chaque propriété et son affectation dans le corps du constructeur ou de  modifier directement l'attribut à l'exterieur dificile de faire une controle en cas une mal affectaion
+$produit->stock = -10; .
+
+j'ai utilser aussi les namesapaces pour eviter les confilts sur les noms des fonction ont les meme noms mais de classe diferrentes
+
+
+Des getters sont utilisés pour accéder aux données et les setters sont utilisés uniquement si une il y'a une modification contrôlée est nécessaire.
+
+j'ai aussi ajouter quelque  méthodes métier .
+
+Exemples : daans la classe Produit la methode estDisponible() L'objectif est d'éviter de disperser les règles métier dans les contrôleurs.
+
+
+
+- **Difficultés / Obstacles** : 
+le premier erreur que j'ai eu est lors que je cree mon premier class role j'avait une erreur comme ce type:
+Typed property src\Model\Entity\Role::$id must not be accessed before initialization la traduction Tu essaies de lire $id, mais tu ne lui as encore donné aucune valeur.ce que j'avait fait $role->afficherId();alors que dans la classe role class Role
+{
+    private int $id;
+    private string $nom;
+
+    public function afficherId(): void
+    {
+        var_dump($this->id);
+    }
+}
+j'ai resoudre ce problemme en creant une contructeur  qui fait que lors que je fait $role = new Role(1, "Administrateur"); il initialise  les donnée

@@ -51,12 +51,13 @@ CREATE TABLE client (
     nom TEXT NOT NULL,
     prenom TEXT NOT NULL,
     email TEXT,
-    tel TEXT NOT NULL,
+    telephone TEXT NOT NULL,
     limite_credit REAL NOT NULL DEFAULT 0,
-
     CHECK (limite_credit >= 0)
 );
+SELECT * FROM client;
 
+DROP Table if EXISTS client;
 
 CREATE TABLE fournisseur (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

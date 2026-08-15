@@ -129,3 +129,4 @@ class Database
         return $statement->rowCount();
     }
 }
+
