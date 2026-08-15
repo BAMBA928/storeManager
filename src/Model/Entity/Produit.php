@@ -73,7 +73,10 @@ class Produit
     }
 
 
-
+    public function definirId(int $id): void
+    {
+        $this->id = $id;
+    }
 
 
 

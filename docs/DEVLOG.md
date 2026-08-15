@@ -228,6 +228,32 @@ j'ai aussi ajouter quelque  méthodes métier .
 
 Exemples : daans la classe Produit la methode estDisponible() L'objectif est d'éviter de disperser les règles métier dans les contrôleurs.
 
+ ** Step 2.2 **
+ j'ai creer tois fichchier dans le src/Model/Repository ProduitRepository.php, ClientRepository.php, FournisseurRepository.php. 
+ j'ai fait la conexion avec en uilsant PDO car doit  Repository reçoit une connexion PDO pour eviter que que chaque Repository creer son propre connexion avec la base j'ai fait private PDO $pdo;
+
+public function __construct(PDO $pdo)
+{
+    $this->pdo = $pdo;
+} aulieu de class ProduitRepository
+{
+    public function __construct()
+    {
+        $this->pdo = new PDO();
+    }
+} en lui passant $pdo  la dépendance dont il a seulment besoin.
+j'ai aussi creer getAll une methode pour chacun avec les memes mais les namespace je n'aurait pas de problemme car il va préciser chaque method d'ou il vient
+le method retoun une array car je recupere beaucoup de ligne 
+pour la requette j'ai $sql = "SELECT * FROM nom de la table"; * car  j'aurait besoin tous ces clones
+pour eviter que postgres nous envoie les donné sous cette façons libelle = "Ordinateur"
+prix_vente = 450000 on fait une transformation avec PDO::FETCH_ASSOC en tableau associatif
+Mais notre application ne veut pas un tableau nous travail avec produit ,fourniseur ou client donc 
+nous devrait encore faire la transformation de BDD ->tableau associatif ->Produit ..
+
+j'ai aussi creer une fonction creer qui nous lors d'un enregistrement (fournisseurs,produit ou client) et j'ai aussi ajouter une nouvelle fonction 
+definirId qui me lors que la fonction creeer retoune l'id d'insertion de le recuperer 
+et une fonction qui permet de mettre à jour le stock lors qu'enregistre une vente ou une enregistrement une nouvelle produit il retourne void car il fait seulement une mise a jour
+tous ces fonctions je l'ai met public car il devrait utiliser par les controllers et services 
 
 
 - **Difficultés / Obstacles** : 

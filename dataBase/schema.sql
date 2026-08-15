@@ -251,7 +251,13 @@ CREATE TABLE ligne_Appros (
         CHECK (sous_total >= 0)
 );
 
+INSERT INTO produit (libelle, prix_vente, stock) VALUES
+('riz',15000,10),
+('sucre',16000,15),
+('Pomme de terre',9000,9);
 
+SELECT id, libelle, prix_vente, stock, seuil_alert
+                FROM produit;
 INSERT INTO role (nom) VALUES
 ('ADMIN'),
 ('VENTE'),

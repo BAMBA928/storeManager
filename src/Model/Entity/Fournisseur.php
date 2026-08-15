@@ -22,4 +22,15 @@ final class Fournisseur
     {
         return $this->telephone;
     }
+
+        public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+       public function definirId(int $id): void
+    {
+        $this->id = $id;
+    }
+
 }

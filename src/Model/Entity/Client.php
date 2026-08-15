@@ -49,6 +49,9 @@ class Client
     {
         return $this->limiteCredit;
     }
-
+       public function definirId(int $id): void
+    {
+        $this->id = $id;
+    }
 
 }

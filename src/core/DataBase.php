@@ -31,37 +31,20 @@ class Database
                     "postgres",
                     "1234"
                 );
-
-            $pdo->setAttribute(
-                PDO::ATTR_DEFAULT_FETCH_MODE,
-                PDO::FETCH_ASSOC
-            );
-
-            $pdo->setAttribute(
-                PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION
-            );
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
             return $pdo;
 
         } catch (PDOException $ex) {
+        //  echo "Erreur PostgreSQL : " . $ex->getMessage() . PHP_EOL;
+        error_log('Database : PostgreSQL indisponible, bascule sur SQLite : ' . $ex->getMessage());
+                $sqlitePath = dirname(__DIR__) . '/../erp.db';
 
-                $sqlitePath = dirname(__DIR__) . '/../erp.php';
+            $pdo = new PDO("sqlite:" . $sqlitePath);
 
-            $pdo = new PDO(
-                "sqlite:" . $sqlitePath
-            );
-
-            $pdo->setAttribute(
-                PDO::ATTR_DEFAULT_FETCH_MODE,
-                PDO::FETCH_ASSOC
-            );
-
-            $pdo->setAttribute(
-                PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION
-            );
-
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
             $pdo->exec('PRAGMA foreign_keys = ON');
 
             return $pdo;
