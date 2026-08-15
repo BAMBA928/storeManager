@@ -201,4 +201,11 @@ Des contraintes (CHECK) ont également été ajoutées afin d'empêcher certaine
         J'ai implémenté Database::getInstance() en pattern Singleton : le constructeur est privé, donc impossible de faire new Database() depuis l'extérieur — il faut obligatoirement passer par getInstance(), qui garantit qu'une seule connexion PDO existe pour toute la durée de la requête, même si plusieurs Repository en ont besoin.
 
          - Pour le Singleton, j'ai dû comprendre pourquoi une propriété `static` était nécessaire pour `$instance` (contrairement à une propriété normale, elle est partagée par toutes les instances de la classe et survit entre les appels à `getInstance()`).
-j'ai aussi la connection qui marche super bien.
+j'ai aussi la connection qui marche super bien
+j'ai fait une autre commit car j'avait creer le erp.db avec vide alors je devrait lier avec shema_sqlite.sql
+j'avais aussi quelque dificulte sur Sqlite avec ces terme different avec postgressql comme SERIAL ...
+j'ai aussi modifier ces ligne pour que la conexion marche sans problemme  avec mon   $pdo = new PDO(
+                "pgsql:host=localhost;dbname=storemanager",
+                "postgres",
+                "1234"
+            ); et             $sqlitePath = dirname(__DIR__) . '/../erp.php';

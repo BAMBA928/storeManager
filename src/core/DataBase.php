@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Core;
+namespace src\Core;
 
 use PDO;
 use PDOException;
@@ -26,11 +26,11 @@ class Database
     private static function connexion(): PDO
     {
         try {
-            $pdo = new PDO(
-                "pgsql:host=localhost;dbname=approvisionnement;port=5433",
-                "ichigo",
-                "password"
-            );
+                $pdo = new PDO(
+                    "pgsql:host=localhost;dbname=storemanager",
+                    "postgres",
+                    "1234"
+                );
 
             $pdo->setAttribute(
                 PDO::ATTR_DEFAULT_FETCH_MODE,
@@ -46,7 +46,7 @@ class Database
 
         } catch (PDOException $ex) {
 
-            $sqlitePath = dirname(__DIR__, 2) . '/erp.db';
+                $sqlitePath = dirname(__DIR__) . '/../erp.php';
 
             $pdo = new PDO(
                 "sqlite:" . $sqlitePath
