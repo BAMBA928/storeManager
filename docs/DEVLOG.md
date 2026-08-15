@@ -32,12 +32,12 @@ une fonctionnalité qui pourrait être ajoutée plus tard.
 
 Cette réflexion m'a permis de comprendre qu'un diagramme de cas d'utilisation ne sert pas uniquement à dessiner des acteurs et des ovales.
 
-Il sert surtout à définir précisément ce que le système doit permettre de faire et à qui.
+Il sert surtout à définir précisément ce que le système doit permettre de faire et à qui.;
 
 
 
 
-b Diagramme de Classe **
+**b Diagramme de Classe **;
 
 Cette étape a pour objectif de transformer les besoins fonctionnels de StoreManager en modèle métier avant l'implémentation.
 
@@ -178,3 +178,21 @@ traçabilité ;
 
 préparation d'une architecture avant développement.
 
+  **c *creation  creation des scripts d'initialisation SQL avec `schema.sql` (PostgreSQL) et `schema_sqlite.sql` (Schéma BDD)**
+
+  j'ai creer deux fichier `schema.sql` et `schema_sqlite.sql` pour intialiser les donné dans le base donnée 
+  
+    J'ai traduit le diagramme de classes en deux scripts SQL 
+
+    cette schéma reprend les entités issues du diagramme de classes :
+Role, ModePaiement, StatutAppro, Utilisateur, Produit, Client, Fournisseur, Commande, LigneCommande, Dette, Paiement, Appro et LigneAppro.
+Des contraintes (CHECK) ont également été ajoutées afin d'empêcher certaines données incohérentes, comme par exemple avoir de - stock négatif :
+-prix négatif ;
+-quantité nulle ou négative ;
+-quantité reçue supérieure à la quantité prévue ;
+-montant payé supérieur au montant total ;
+-montant restant supérieur au montant initial.
+
+    la règle que j'ai appliquée pour choisir entre ON DELETE CASCADE et ON DELETE RESTRICT : les tables qui représentent une **composition** dans mon diagramme de classes (LigneCommande, LigneAppro, Paiement — qui n'ont aucun sens sans leur parent) sont en CASCADE. Les class qui sont durables (Client, Produit, Fournisseur, Utilisateur) sont en RESTRICT, pour ne jamais perdre l'historique de ventes ou de dettes si quelqu'un supprime un client ou un produit par erreur.
+
+      Pour SQLite, j'ai dû adapter trois choses par rapport au script PostgreSQL : SERIAL devient INTEGER PRIMARY KEY AUTOINCREMENT, BOOLEAN n'existe pas donc j'utilise INTEGER avec une contrainte CHECK (... IN (0,1)), et il faut activer manuellement les clés étrangères avec PRAGMA foreign_keys = ON;(elles sont désactivées par défaut dans SQLite, contrairement à PostgreSQL).
