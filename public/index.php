@@ -20,5 +20,3 @@ echo $produit->getStock() ;
 var_dump($produit->estDisponible(5));
 
 
-
-
