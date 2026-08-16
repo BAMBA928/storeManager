@@ -2,14 +2,14 @@
 namespace src\Model\Repository;
   
 use src\Core\Database;
-use PDO;
+// use PDO;
 use src\Model\Entity\Client;
 class clientRepository{
 
-    public function __construct(
-        private PDO $pdo
-    ) {
-    }
+    // public function __construct(
+    //     private PDO $pdo
+    // ) {
+    // }
 
     public function trouverTous(): array
     {
@@ -24,9 +24,9 @@ class clientRepository{
                 id: (int) $ligne['id'],
                 nom: $ligne['nom'],
                  prenom: $ligne['prenom'],
-                email: (float) $ligne['email'],
-                telephone: (int) $ligne['telephone'],
-                limiteCredit: (int) $ligne['limiteCredit']  
+                email:  $ligne['email'],
+                telephone:  $ligne['telephone'],
+                limiteCredit:  $ligne['limiteCredit']  
             );
 
         }
@@ -41,17 +41,16 @@ class clientRepository{
         $sql = 'SELECT * FROM client WHERE id = :id';
 
         $ligne = Database::executeQuery($sql, ['id' => $id], true);
+        if (empty($clients)) {
+            return null;
+        }
         $clients = new client(
             id: (int) $ligne['id'],
             nom: $ligne['nom'],
             prenom: $ligne['prenom'],
-            email: (float) $ligne['email'],
-            telephone: (int) $ligne['telephone']  ,   
-            limiteCredit: (int) $ligne['limiteCredit']        );
-        if (empty($clients)) {
-            return null;
-        }
-
+            email:  $ligne['email'],
+            telephone:  $ligne['telephone']  ,   
+            limiteCredit:  $ligne['limiteCredit']        );
 
         return $clients;
     }

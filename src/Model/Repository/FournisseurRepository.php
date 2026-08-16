@@ -1,14 +1,11 @@
 <?php
 namespace src\Model\Repository;
 use src\Core\Database;
-use PDO;
+
 use src\Model\Entity\Fournisseur;
 class FournisseurRepository{
 
-    public function __construct(
-        private PDO $pdo
-    ) {
-    }
+
 
     public function trouverTous(): array
     {
@@ -22,13 +19,11 @@ class FournisseurRepository{
             $Fournisseur[] = new Fournisseur(
                 id: (int) $ligne['id'],
                 nomComplet: $ligne['nomComplet'],
-                email: (float) $ligne['email'],
-                telephone: (int) $ligne['telephone'],
+                email:  $ligne['email'],
+                telephone:  $ligne['telephone'],
             );
 
         }
-
-
         return $Fournisseur;
     }
 
@@ -38,16 +33,14 @@ class FournisseurRepository{
         $sql = "SELECT * FROM fournisseur WHERE id = :id";
 
         $ligne = Database::executeQuery($sql, ['id' => $id], true);
+         if (empty($ligne)) {
+            return null;
+        }
         $Fournisseurs = new Fournisseur(
             id: (int) $ligne['id'],
             nomComplet: $ligne['nomComplet'],
-            email: (float) $ligne['email'],
-            telephone: (int) $ligne['telephone']        );
-        if (empty($Fournisseurs)) {
-            return null;
-        }
-
-
+            email:  $ligne['email'],
+            telephone:  $ligne['telephone']    );
         return $Fournisseurs;
     }
 
@@ -57,7 +50,7 @@ class FournisseurRepository{
         $sql= 'INSERT INTO fournisseur (nom_complet, email, telephone) VALUES (:nom_complet, :email, :telephone)';
         $id = Database::executeUpdate($sql,
             [
-                'nomComplet' => $Fournisseur->getnomComplet(),
+                'nom_complet' => $Fournisseur->getnomComplet(),
                 'email' => $Fournisseur->getEmail(),
                 'telephone' => $Fournisseur->getTel()
               
@@ -66,9 +59,6 @@ class FournisseurRepository{
         $Fournisseur->definirId($id);
         return $Fournisseur;
     }
-
-
-
 
 
 }

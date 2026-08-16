@@ -2,17 +2,13 @@
 
 namespace src\Model\Repository;
 
-use PDO;
 use src\Model\Entity\Produit;
 use src\Core\Database;
 
 
 class ProduitRepository
 {
-    public function __construct(
-        private PDO $pdo
-    ) {
-    }
+   
 
     public function trouverTous(): array
     {
@@ -26,11 +22,12 @@ class ProduitRepository
             $produits[] = new Produit(
                 id: (int) $ligne['id'],
                 libelle: $ligne['libelle'],
-                prixVente: (float) $ligne['prixVente'],
+                prixVente: (float) $ligne['prix_vente'],
                 stock: (int) $ligne['stock'],
-                seuilAlert: (int) $ligne['seuilAlert']
+                seuilAlert: (int) $ligne['seuil_alert'],
+                
             );
-
+                // var_dump($ligne['seuil_alert']);
         }
 
 
@@ -43,31 +40,29 @@ class ProduitRepository
         $sql = "SELECT * FROM produit WHERE id = :id";
 
         $ligne = Database::executeQuery($sql, ['id' => $id], true);
+           if (empty($ligne)) {
+            return null;
+        }
         $produits = new Produit(
             id: (int) $ligne['id'],
             libelle: $ligne['libelle'],
-            prixVente: (float) $ligne['prixVente'],
+            prixVente: (float) $ligne['prix_vente'],
             stock: (int) $ligne['stock'],
-            seuilAlert: (int) $ligne['seuilAlert']
+            seuilAlert: (int) $ligne['seuil_alert']
         );
-        if (empty($produits)) {
-            return null;
-        }
-
-
         return $produits;
     }
 
 
     public function creer(Produit $produit): Produit
     {
-        $sql= 'INSERT INTO produit (libelle, prix_vente, stock, seuil_alert) VALUES (:libelle, :prixVente, :stock, :seuilAlert)';
+        $sql= 'INSERT INTO produit (libelle, prix_vente, stock, seuil_alert) VALUES (:libelle, :prix_vente, :stock, :seuilAlert)';
         $id = Database::executeUpdate($sql,
             [
                 'libelle' => $produit->getLibelle(),
                 'prix_vente' => $produit->getPrixVente(),
                 'stock' => $produit->getStock(),
-                'seuilAlert' => $produit->getSeuilAlert(),
+                'seuil_alert' => $produit->getSeuilAlert(),
             ]
         );
         $produit->definirId($id);

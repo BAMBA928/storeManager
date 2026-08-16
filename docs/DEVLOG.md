@@ -255,6 +255,21 @@ definirId qui me lors que la fonction creeer retoune l'id d'insertion de le recu
 et une fonction qui permet de mettre à jour le stock lors qu'enregistre une vente ou une enregistrement une nouvelle produit il retourne void car il fait seulement une mise a jour
 tous ces fonctions je l'ai met public car il devrait utiliser par les controllers et services 
 
+ ** Step 2.3 **
+j'ai creer un fichier serviceVente.php dans src/service 
+ce que je voulait faire Charge le client 
+Pour chaque article du panier : vérifie le produit, décrémente son stock  decrementerStock(), qui en meme temps verifie si le  stock est insuffisant, calcule le total Détermine si la vente est à crédit (montantPaye < montantTotal)
+Si crédit : j'additionne la dette déjà existante du client avec cette methode sommeDetteNonSoldeeParClient() à la nouvelle dette creer, et vérifie via a travers du fonction qui sera dans la classe client depasseLimiteCredit()  avant d'écrire quoi que ce soit en base
+Seulement après toutes ces vérifications : crée la Commande, les LigneCommande, écrit le nouveau stock en base, et crée la Dette s'ilen a
+
+c'est cela que j'ai penser d'utilser la transactionnels car je dois INSERT commande INSERT lignes UPDATE stock INSERT dette si l'une de de ces requettes echoue tous le reste ne devrait pas s'executer et les opérations précédentes seront annulées on fait une roalback si tous passe on commit
+
+Sur cette j'ai appris aussi la repository recupere les donné et Le VenteService sert à prendre la décision métier.
+j'ai appris une nouvelle notion FOR UPDATE Le FOR UPDATE demande à PostgreSQL de verrouiller la ligne jusqu'au COMMIT ou ROLLBACK.
+SELECT *
+FROM produit
+WHERE id = :id
+FOR UPDATE
 
 - **Difficultés / Obstacles** : 
 le premier erreur que j'ai eu est lors que je cree mon premier class role j'avait une erreur comme ce type:

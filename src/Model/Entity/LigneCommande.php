@@ -4,7 +4,7 @@ namespace src\Model\Entity;
 
 final class LigneCommande
 {
-    public function __construct(private int $id,private int $commandeId,private int $produitId,private int $quantite,private float $prixUnitaire) {
+    public function __construct(private ?int $id,private int $commandeId,private int $produitId,private int $quantite,private float $prixUnitaire) {
     }
 
     public function getId(): ?int
@@ -25,6 +25,16 @@ final class LigneCommande
     public function getQuantite(): int
     {
         return $this->quantite;
+    }
+
+        public function getcommandeId(): int
+    {
+        return $this->commandeId;
+    }
+
+          public function getprixUnitaire(): int
+    {
+        return $this->prixUnitaire;
     }
 
     public function calculerSousTotal(): float

@@ -4,7 +4,7 @@ namespace src\Model\Entity;
 
 class Dette
 {
-    private int $id;
+    private ?int $id;
     private int $commandeId;
     private int $clientId;
     private float $montantInitial;
@@ -50,6 +50,12 @@ class Dette
     {
         return $this->statut;
     }
+
+      public function definirId(int $id): void
+    {
+        $this->id = $id;
+    }
+
 
 
 }

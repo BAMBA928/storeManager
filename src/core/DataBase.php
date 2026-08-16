@@ -28,7 +28,7 @@ class Database
         try {
                 $pdo = new PDO(
                     "pgsql:host=localhost;dbname=storemanager",
-                    "postgres",
+                    "postres",
                     "1234"
                 );
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);

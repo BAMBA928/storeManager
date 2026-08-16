@@ -4,7 +4,7 @@ namespace src\Model\Entity;
 
 class Commande
 {
-    private int $id;
+    private ?int $id;
     private int $clientId;
     private int $utilisateurId;
     private int $modePaiementId;
@@ -70,6 +70,9 @@ class Commande
     {
         return $this->montantTotal - $this->montantPaye;
     }
-
+  public function definirId(int $id): void
+    {
+        $this->id = $id;
+    }
 
 }

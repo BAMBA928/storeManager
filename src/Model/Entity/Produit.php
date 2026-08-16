@@ -4,7 +4,7 @@ namespace src\Model\Entity;
 
 class Produit
 {
-    private int $id;
+    private ?int $id;
     private string $libelle;
     private float $prixVente;
     private int $stock;
