@@ -55,7 +55,12 @@ CREATE TABLE client (
     CONSTRAINT ck_client_limite_credit
         CHECK (limite_credit >= 0)
 );
+INSERT INTO client VALUES(1,'Sankhe','Bamba','Bamba@gmail.com','763640650',10);
+INSERT INTO client VALUES(2,'FALL','Bamba','Fall@gmail.com','7636400000',10);
 
+                    SELECT * FROM client;
+
+ SELECT limite_credit FROM client WHERE id = 1;
 CREATE TABLE fournisseur (
     id SERIAL PRIMARY KEY,
     nom_complet VARCHAR(150) NOT NULL,
@@ -99,7 +104,12 @@ CREATE TABLE commande (
             AND montant_paye <= montant_total
         )
 );
+INSERT INTO commande(id,client_id,utilisateur_id,mode_paiement_id,montant_total,montant_paye,) VALUES(1,1,1,1,15000,10000,TRUE);
 
+INSERT INTO commande ( client_id,utilisateur_id,mode_paiement_id,date_commande,montant_total,montant_paye)
+        
+                VALUES (2,1,2,CURRENT_TIMESTAMP,500000,30000);
+                    SELECT * FROM ligne_commande;
 
 CREATE TABLE ligne_commande (
     id SERIAL PRIMARY KEY,
@@ -128,7 +138,10 @@ CREATE TABLE ligne_commande (
     CONSTRAINT ck_ligne_commande_sous_total
         CHECK (sous_total >= 0)
 );
+INSERT INTO ligne_commande (commande_id,produit_id,quantite,prix_unitaire,sous_total)
+                    VALUES (2,2,2,6000,);
 
+                    SELECT * FROM ligne_commande;
 
 CREATE TABLE dette (
     id SERIAL PRIMARY KEY,
@@ -157,8 +170,10 @@ CREATE TABLE dette (
             AND montant_restant <= montant_initial
         )
 );
+INSERT INTO dette VALUES(1,1,1,10000,5000,'EN COURS');
 
 
+SELECT COALESCE(SUM(montant_restant),  0 ) AS total_dettes FROM dette WHERE client_id = 1 ;
 
 CREATE TABLE paiement (
     id SERIAL PRIMARY KEY,
@@ -280,3 +295,5 @@ INSERT INTO statut_appro (nom) VALUES
 ('ANNULE');
 
 SELECT nom  from statut_appro;
+
+

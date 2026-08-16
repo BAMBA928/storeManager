@@ -76,6 +76,24 @@ class ProduitRepository
         Database::executeUpdate(  $sql, ['stock' => $produit->getStock(), 'id' => $produit->getId()]
         );
     }
+    public function trouverParIdPourVente(int $id): ?Produit
+{
+    $sql = " SELECT * FROM produit WHERE id = :id";
+
+    $ligne = Database::executeQuery( $sql,['id' => $id], true );
+
+    if (empty($ligne)) {
+        return null;
+    }
+
+    return new Produit(
+        id: (int) $ligne['id'],
+        libelle: $ligne['libelle'],
+        prixVente: (float) $ligne['prix_vente'],
+        stock: (int) $ligne['stock'],
+        seuilAlert: (int) $ligne['seuil_alert']
+    );
+}
 
 
 }

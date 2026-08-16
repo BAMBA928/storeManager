@@ -258,18 +258,21 @@ tous ces fonctions je l'ai met public car il devrait utiliser par les controller
  ** Step 2.3 **
 j'ai creer un fichier serviceVente.php dans src/service 
 ce que je voulait faire Charge le client 
-Pour chaque article du panier : vérifie le produit, décrémente son stock  decrementerStock(), qui en meme temps verifie si le  stock est insuffisant, calcule le total Détermine si la vente est à crédit (montantPaye < montantTotal)
-Si crédit : j'additionne la dette déjà existante du client avec cette methode sommeDetteNonSoldeeParClient() à la nouvelle dette creer, et vérifie via a travers du fonction qui sera dans la classe client depasseLimiteCredit()  avant d'écrire quoi que ce soit en base
-Seulement après toutes ces vérifications : crée la Commande, les LigneCommande, écrit le nouveau stock en base, et crée la Dette s'ilen a
+ - je verifie si le panier  contient au moins un produit
+ -  je  Vérifie aussi si  les quantités il sont pas null ou negatif
+ - je commence maintenant la transaction
+ - je verifie les produits,  vérifie le stock  et calculer le total.
+ -  si tous se passe bien je garde dans une tableau $produitsVendus   les informations nécessaires du produit pour que je puis créer les lignes après la commande.
+ -  je verifie maitenant le montant payé si il respecte les norme negatif ou si le montant paye n'est pas supeieur au montant total .
+ - je Calcule le montant restant pour cherche si le client cree une dette ou pas  il a une credit si le resultat du montantRestant est positif .
+ - je  Vérifie aussi si la limite de crédit est atteint si le peut encore de la ligne 96 à 120 crée une dette.
+ - si tous ce passe bien je  Crée la commande pour ce client .
+ - maitenant apres enrgister ce commande  je Crée  les lignes de commande et aussi mettre à jour le stock j'avais parcourus ligne de produit qui sont dans produitsVendus et l'insert  pour ce commande .
+ - et enfin je  Crée la dette uniquement  si le paiement est incomplet par exemple estcredit n'est pas vide.
+ - si  Toutes ces  opérations ont réussi on commit.
+ -   s'il a une erreur annule toute la vente.
 
-c'est cela que j'ai penser d'utilser la transactionnels car je dois INSERT commande INSERT lignes UPDATE stock INSERT dette si l'une de de ces requettes echoue tous le reste ne devrait pas s'executer et les opérations précédentes seront annulées on fait une roalback si tous passe on commit
-
-Sur cette j'ai appris aussi la repository recupere les donné et Le VenteService sert à prendre la décision métier.
-j'ai appris une nouvelle notion FOR UPDATE Le FOR UPDATE demande à PostgreSQL de verrouiller la ligne jusqu'au COMMIT ou ROLLBACK.
-SELECT *
-FROM produit
-WHERE id = :id
-FOR UPDATE
+**j'ai repris tous cette partie car il avait beaucoup d'erreur c'est que j'ai appris ce methode d'ecrire sur une copie tous les que j'aurait besoin etape par sans sauter aucune etaê  pour enregistrer une vente **
 
 - **Difficultés / Obstacles** : 
 le premier erreur que j'ai eu est lors que je cree mon premier class role j'avait une erreur comme ce type:
