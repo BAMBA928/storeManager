@@ -14,6 +14,8 @@ CREATE TABLE statut_appro (
     nom VARCHAR(50) NOT NULL UNIQUE
 );
 
+SELECT * FROM
+
 CREATE TABLE utilisateur (
     id SERIAL PRIMARY KEY,
     role_id INTEGER NOT NULL,
@@ -58,7 +60,7 @@ CREATE TABLE client (
 INSERT INTO client VALUES(1,'Sankhe','Bamba','Bamba@gmail.com','763640650',10);
 INSERT INTO client VALUES(2,'FALL','Bamba','Fall@gmail.com','7636400000',10);
 
-                    SELECT * FROM client;
+                    SELECT * FROM client ORDER BY nom, prenom;
 
  SELECT limite_credit FROM client WHERE id = 1;
 CREATE TABLE fournisseur (
@@ -171,9 +173,10 @@ CREATE TABLE dette (
         )
 );
 INSERT INTO dette VALUES(1,1,1,10000,5000,'EN COURS');
+UPDATE dette set statut = "NON_SOLDEE" WHERE id=1;
 
 
-SELECT COALESCE(SUM(montant_restant),  0 ) AS total_dettes FROM dette WHERE client_id = 1 ;
+SELECT COALESCE(SUM(montant_restant),  0 ) AS total_dettes FROM dette WHERE client_id = 1 AND statut = 'NON_SOLDEE' ;
 
 CREATE TABLE paiement (
     id SERIAL PRIMARY KEY,

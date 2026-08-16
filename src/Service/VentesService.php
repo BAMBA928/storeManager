@@ -56,7 +56,7 @@ class VenteService
 
                 if (!$produit->estDisponible($quantite)) {
                     throw new \InvalidArgumentException(
-                        'Stock insuffisant pour le produit : '
+                        'Stock insuffisant pour ce produit '
                         
                     );
                 }
@@ -105,7 +105,7 @@ class VenteService
                 }
                  $limiteCredit = (float) $client['limite_credit'];
 
-                $sqlDettes = "SELECT COALESCE(SUM(montant_restant),  0 ) AS total_dettes FROM dette WHERE client_id = :client_id ";
+                $sqlDettes = "SELECT COALESCE(SUM(montant_restant),  0 ) AS total_dettes FROM dette WHERE client_id = :client_id AND statut = 'NON_SOLDEE'";
 
                 $resultatDettes = Database::executeQuery( $sqlDettes,['client_id' => $clientId],true);
 
@@ -132,7 +132,7 @@ class VenteService
                     'mode_paiement_id' => $modePaiementId,
                     'montant_total' => $montantTotal,
                     'montant_paye' => $montantPaye,
-                    'est_credit' => $estCredit
+                    'est_credit' => $estCredit ? 1 : 0
                 ]
             );
 
@@ -173,7 +173,7 @@ class VenteService
                         'client_id' => $clientId,
                         'montant_initial' => $montantRestant,
                         'montant_restant' => $montantRestant,
-                        'statut' => 'EN_COURS'
+                        'statut' => 'NON_SOLDEE'
                     ]
                 );
             }

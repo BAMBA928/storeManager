@@ -19,18 +19,18 @@ class clientRepository{
 
         $clients = [];
 
+
         foreach ($lignes as $ligne) {
             $clients[] = new client(
                 id: (int) $ligne['id'],
                 nom: $ligne['nom'],
-                 prenom: $ligne['prenom'],
+                prenom: $ligne['prenom'],
                 email:  $ligne['email'],
                 telephone:  $ligne['telephone'],
-                limiteCredit:  $ligne['limiteCredit']  
+                limiteCredit: (float) $ligne['limite_credit']  
             );
 
         }
-
 
         return $clients;
     }
@@ -41,7 +41,7 @@ class clientRepository{
         $sql = 'SELECT * FROM client WHERE id = :id';
 
         $ligne = Database::executeQuery($sql, ['id' => $id], true);
-        if (empty($clients)) {
+        if (empty($ligne)) {
             return null;
         }
         $clients = new client(
@@ -50,7 +50,8 @@ class clientRepository{
             prenom: $ligne['prenom'],
             email:  $ligne['email'],
             telephone:  $ligne['telephone']  ,   
-            limiteCredit:  $ligne['limiteCredit']        );
+            limiteCredit:  $ligne['limite_credit'] 
+             );
 
         return $clients;
     }
